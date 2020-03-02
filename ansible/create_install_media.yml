@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    - include_role:
+        name: create_install_medium

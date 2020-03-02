@@ -1,0 +1,16 @@
+---
+# tasks file for create_install_medium
+
+- include_vars:
+    file: main.yml
+
+- name: Downloading the installation media.
+  get_url:
+    url: "{{ iso_url }}"
+    dest: /tmp/centos.iso
+
+- name: Creating the bootable USB Device.
+  command: dd if=/tmp/centos.iso of={{ flash_device }} bs=4m
+
+- name: Ensuring that the filesystem has synced.
+  command: sync
