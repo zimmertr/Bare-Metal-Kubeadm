@@ -1,0 +1,6 @@
+# CIDR for the Calico Pod Network - MUST be different from your Kubernetes CIDR to avoid an IP conflict. Subnet size will automatically be set to /16.
+calico_cidr: '172.16.0.0'
+
+# URL for the Calico Network Policy:
+# Can be found here: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tabs-pod-install-2
+calico_policy_url: 'https://docs.projectcalico.org/v3.8/manifests/calico.yaml'

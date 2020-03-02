@@ -1,6 +1,9 @@
 ---
 # tasks file for bootstrap_kubernetes
 
+- include_vars:
+    file: main.yml
+
 - name: Installing the Docker repository.
   yum_repository:
     name: docker-ce
@@ -52,7 +55,7 @@
     state: disabled
 
 - name: Initializing Kubernetes.
-  command: kubeadm init --pod-network-cidr=192.168.0.0/16
+  command: "kubeadm init --pod-network-cidr={{ calico_cidr }}/16"
   ignore_errors: yes #Dirty, but this makes it immutable.
 
 - name: Creating a .kube directory.
@@ -70,5 +73,22 @@
   command: kubectl taint nodes --all node-role.kubernetes.io/master-
   ignore_errors: yes # Ugly, but makes immutable
 
-- name: Deploying the Calico CNI Plugin.
-  command: kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+- name: Downloading the Calico Pod Network manifest.
+  get_url:
+    url: "{{ calico_policy_url }}"
+    dest: /tmp/calico.yml
+
+- name: Modifying the Pod network CIDR for Calico.
+  replace:
+    path: /tmp/calico.yml
+    regexp: 192.168.0.0
+    replace: "{{ calico_cidr }}"
+
+- name: Applying the Calico Pod Network to Kubernetes.
+  become: yes
+  shell: kubectl apply -f /tmp/calico.yml
+
+- name: Deleting the Calico Pod Network manifest from disk.
+  file:
+    path: /tmp/calico.yml
+    state: absent
