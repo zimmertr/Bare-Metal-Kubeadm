@@ -1,0 +1,9 @@
+# Ansible
+*.retry
+ansible/ssh.key
+
+# Vim
+*.un~
+
+# MacOS
+.DS_Store
