@@ -1,0 +1,60 @@
+---
+# tasks file for prepare_zfs
+
+- name: Installing the ZFS Repository.
+  yum:
+    name: http://download.zfsonlinux.org/epel/zfs-release.el7_7.noarch.rpm
+    state: installed
+
+- name: Installing package dependencies.
+  yum:
+    name:
+      - epel-release
+      - nfs-utils
+      - kernel-devel
+    state: latest
+
+- name: Disabling the dkms repository.
+  blockinfile:
+    block: |
+      [zfs]
+      name=ZFS on Linux for EL7 - dkms
+      baseurl=http://download.zfsonlinux.org/epel/7.7/$basearch/
+      enabled=0
+      metadata_expire=7d
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
+    state: absent
+    path: /etc/yum.repos.d/zfs.repo
+
+- name: Enabling the kmods repository.
+  blockinfile:
+    block: |
+      [zfs-kmod]
+      name=ZFS on Linux for EL7 - kmod
+      baseurl=http://download.zfsonlinux.org/epel/7.7/kmod/$basearch/
+      enabled=1
+      metadata_expire=7d
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
+    state: present
+    path: /etc/yum.repos.d/zfs.repo
+
+- name: Installing ZFS
+  yum:
+    name: zfs
+    state: installed
+
+- name: Loading the ZFS Kernel Module
+  modprobe:
+    name: zfs
+    state: present
+
+- name: Importing the ZFS Storage Pools.
+  command: zpool import -f "{{ pool }}"
+  loop:
+    - "SaturnPool"
+    - "FlashPool"
+  loop_control:
+    loop_var: pool
+  ignore_errors: yes

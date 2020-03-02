@@ -1,0 +1,4 @@
+---
+# vars file for create_install_medium
+#iso_url: ''
+flash_device: '/dev/disk2'

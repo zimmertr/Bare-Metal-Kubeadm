@@ -1,0 +1,74 @@
+---
+# tasks file for bootstrap_kubernetes
+
+- name: Installing the Docker repository.
+  yum_repository:
+    name: docker-ce
+    description: docker-ce stable repo
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    gpgcheck: yes
+
+- name: Installing the Kubernetes repository.
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes repo
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    gpgcheck: yes
+
+- name: Installing the dependencies for Docker and Kubernetes.
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: installed
+
+- name: Installing packages for Docker & Kubelet.
+  yum:
+    state: installed
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - kubeadm
+      - kubelet
+      - kubectl
+
+- name: Enabling the Systemd units for Docker & Kubelet.
+  systemd:
+    state: started
+    name: "{{ unit }}"
+    enabled: yes
+  loop:
+    - "docker"
+    - "kubelet"
+  loop_control:
+    loop_var: unit
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+- name: Initializing Kubernetes.
+  command: kubeadm init --pod-network-cidr=192.168.0.0/16
+  ignore_errors: yes #Dirty, but this makes it immutable.
+
+- name: Creating a .kube directory.
+  file:
+    path: /root/.kube
+    state: directory
+
+- name: Staging the configuration file.
+  copy:
+    remote_src: yes
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+
+- name: Untainting the API Server.
+  command: kubectl taint nodes --all node-role.kubernetes.io/master-
+  ignore_errors: yes # Ugly, but makes immutable
+
+- name: Deploying the Calico CNI Plugin.
+  command: kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml

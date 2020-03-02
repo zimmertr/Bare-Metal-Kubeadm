@@ -1,0 +1,45 @@
+---
+# tasks file for prepare_os
+
+- name: Upgrading all packages to the latest version.
+  yum:
+    name: '*'
+    state: latest
+
+- name: Configuring the firewall.
+  firewalld:
+    port: "{{ port }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - 6443/tcp
+    - 2379-2380/tcp
+    - 10250-10252/tcp
+    - 30000-32767/tcp
+  loop_control:
+    loop_var: port
+
+- name: Disabling nftables.
+  alternatives:
+    name: iptables
+    path: /usr/sbin/iptables-legacy
+  ignore_errors: yes
+
+- name: Loading the br_netfilter Kernel Module.
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: Disabling Swap.
+  mount:
+      name: "{{ filesystem }}"
+      fstype: swap
+      state: absent
+  loop:
+      - swap
+      - none
+  loop_control:
+      loop_var: filesystem
+
+- name: Turning off swap.
+  shell: swapoff -a

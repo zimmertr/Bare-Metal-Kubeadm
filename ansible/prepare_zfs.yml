@@ -1,0 +1,5 @@
+---
+- hosts: server
+  tasks:
+    - include_role:
+        name: prepare_zfs

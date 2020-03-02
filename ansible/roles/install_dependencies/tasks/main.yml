@@ -1,0 +1,27 @@
+---
+# tasks file for install_dependencies
+
+- name: Installing the EPEL repository.
+  yum:
+    name: epel-release
+    state: installed
+
+- name: Installing some quality of life packages.
+  yum:
+    name:
+      - vim
+      - screen
+      - tree
+      - wget
+      - git
+      - lsof
+      - nmap
+      - net-tools
+      - bind-utils
+      - htop
+      - bmon
+      - iotop
+      - lm_sensors
+      - bash-completion
+      - bash-completion-extras
+    state: installed

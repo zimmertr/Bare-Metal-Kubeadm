@@ -1,0 +1,15 @@
+---
+- hosts: server
+  become: true
+  tasks:
+    - include_role:
+        name: "{{ role }}"
+      loop:
+        - install_dependencies
+        - prepare_os
+        - bootstrap_kubernetes
+      loop_control:
+        loop_var: role
+
+    - name: Rebooting the server to finalize install.
+      reboot:
