@@ -24,4 +24,6 @@
       - lm_sensors
       - bash-completion
       - bash-completion-extras
+      - hdparm
+      - fio
     state: installed

@@ -184,6 +184,7 @@ It is likely that you will need the ability to set up controllers and operators 
 | ------------------ | ------------------------------------------------------------ |
 | Kubernetes Version | Support specifying specific Kubernetes Version               |
 | ZFS Snapshots      | Enable regular snapshotting of ZFS storage pools             |
+| Automate Sanoid    | Sanoid was installed manually                                |
 | Configurable CNI   | Support deploying Weave Net, Flannel, Cilium                 |
 | Automate SSH Keys  | Automate the creation and distribution of keys               |
 | Harden System      | Harden with SSH configuration, user accounts, fail2ban, etc  |
@@ -198,10 +199,11 @@ It is likely that you will need the ability to set up controllers and operators 
 
 ## Interested in Contributing?
 
-If you're interested in helping with this project there are a few areas of contribution I would appreciate:
+If you're interested in helping with this project here are a few ideas:
 
 1. Adding support for differnet storage backends using Ansible/OpenEBS.
 2. Adding support for different Cloud/Infrastructure providers using Terraform.
+3. Automating the deployment of an SMTP Relay, Sanoid, ZFS ZED, etc.
 
 
 
