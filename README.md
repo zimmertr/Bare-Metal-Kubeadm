@@ -41,7 +41,7 @@ Requirements
 Modify the variables present in each of these files. Sometimes you will find variables that are commented out. This means that a default variable has been set in `ansible/roles/ROLE/defaults/main.yml`. If you uncomment this variable and populate it with a value it will override the default value. See `sensible/roles/ROLE/README.md` for clarifications on the use of each variable if  necessary.
 
 * `ansible/roles/create_install_medium/vars/main.yml`
-* `ansible/roltes/configure_kubernetes/vars/main.yml`
+* `ansible/roles/configure_kubernetes/vars/main.yml`
 
 <hr>
 
