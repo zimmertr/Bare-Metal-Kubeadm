@@ -1,6 +1,8 @@
 Bare_Metal_Kubeadm
 =========
 
+WARNING: This project was a weekend attempt to automate building single node bare metal kubernetes clusters. I ended up deciding that idea sucked and went back to virtualization. Therefore, this project is deprecated by [TKS](https://github.com/zimmertr/TKS) and will no longer be maintained. 
+
 ## Summary
 
 This project (BMK) is the successor to [TKS](https://github.com/zimmertr/Bootstrap-Kubernetes-with-QEMU). TKS was used for years but became difficult to maintain with continuing infrastructure changes.
